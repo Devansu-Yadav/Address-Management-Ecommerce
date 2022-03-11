@@ -4,12 +4,13 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { InputFormProvider } from './Components/Input-Form-Context';
+import { AddressDataProvider } from './Components/Address-Data-Context';
 
 ReactDOM.render(
   <React.StrictMode>
-    <InputFormProvider>
-      <App />
-    </InputFormProvider>
+	<InputFormProvider>
+		<App />
+	</InputFormProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

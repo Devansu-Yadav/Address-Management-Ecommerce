@@ -37,15 +37,20 @@ code {
 }
 
 .address-list {
+	width: 60%;
+}
+
+.address-card {
 	text-align: left;
 	font-size: 1.6rem;
-	width: 60%;
+	width: 100%;
 	justify-content: center;
 	align-items: flex-start;
+	margin: 1.5rem auto;
 	border: 2px solid var(--hover-color);
 }
 
-.name-phone-no-container {
+.name-phone-no-container, .state-city-container {
 	margin: 1rem 1rem 0.5rem 1.5rem;
 	font-weight: 500;
 	column-gap: 1rem;
