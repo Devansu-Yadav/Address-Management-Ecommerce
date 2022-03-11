@@ -1,10 +1,13 @@
 import '../index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useInputForm } from './Input-Form-Context';
 
 const InputFormController = () => {
+    const { isFormControllerAdded, handleFormControllerClick } = useInputForm();
+
     return (
-        <div className='flex-row-container add-address space-M'>
+        <div className='flex-row-container add-address space-M' onClick={ handleFormControllerClick } style={{ display: isFormControllerAdded ? "none": "flex" }}>
             <div className='add-address-icon centered-flex-row-container'>
                 <FontAwesomeIcon icon={faPlus} />
             </div>
