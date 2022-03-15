@@ -2,14 +2,14 @@ import '../index.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useInputForm } from './Input-Form-Context';
-import { useAddressData } from './Address-Data-Context'; 
 
 const InputFormController = () => {
-    const { isFormControllerAdded, handleFormControllerClick, clearFormStates } = useInputForm();
+    const { isFormControllerAdded, handleFormControllerClick, clearFormStates, defaultFormData, handleFormData } = useInputForm();
 
     return (
         <div className='flex-row-container add-address space-M' onClick={() => {
             handleFormControllerClick();
+            handleFormData(defaultFormData);
             clearFormStates();
         }} 
         style={{ display: isFormControllerAdded ? "none": "flex" }}>

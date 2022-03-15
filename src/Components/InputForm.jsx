@@ -1,29 +1,29 @@
 import '../index.css';
+import faker from 'faker';
 import { useEffect, useState } from 'react';
 import { useInputForm } from './Input-Form-Context';
 import { useAddressData } from './Address-Data-Context';
 
 const InputForm = () => {
-    const { isFormControllerAdded, handleFormControllerClick, isEditBtnClicked, setIsEditBtnClicked } = useInputForm();
+    const { isFormControllerAdded, handleFormControllerClick, isEditBtnClicked, setIsEditBtnClicked, defaultFormData, formData, handleFormData } = useInputForm();
     const { addressData, setAddressData, addAddress, updateAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
 
-    const fetchFormData = (event) => {
-        const formData = {
-            "name": event.target.name.value,
-            "mobile_no": event.target['phone no'].value,
-            "pincode": event.target['pincode'].value,
-            "city": event.target['city'].value,
-            "address": event.target['address'].value,
-            "alt_mobile_no": event.target['alt phone no'].value,
-            "state": event.target['state'].value
-        };
-        return formData;
+    const onSubmitHandler = (event) => {
+        event.preventDefault();
+        if(isEditBtnClicked) {
+            updateAddressHandler(formData);
+        } else {
+            addAddressHandler(formData);
+        }
+    }
+
+    const formOnChangeHandler = (event) => {
+        handleFormData({...formData, [event.target.name]: event.target.value });
     }
 
     const addAddressHandler = (address) => {
-        console.log(address);
         setAddressOps({...defaultAddressOps, add: true });
-        setAddressData((addresses) => addresses.concat([address]));
+        setAddressData((addresses) => addresses.concat([{...address, id: faker.random.uuid()}]));
     }
 
     const updateAddressHandler = (updatedAddress) => {
@@ -34,9 +34,11 @@ const InputForm = () => {
 
     // Add Address
     useEffect(() => {
+        console.log("Is this effect running");
         if(addressOps.add) {
             const addedAddress = addressData[addressData.length - 1];
             addAddress(addedAddress);
+            handleFormControllerClick();
         }
     }, [addressData, addressOps]);
 
@@ -45,49 +47,40 @@ const InputForm = () => {
         if(addressOps.id.length && addressOps.update) {
             const updatedAddress = addressData.find((address) => address.id === addressOps.id);
             updateAddress(addressOps.id, updatedAddress);
+            setIsEditBtnClicked(false);
         }
     }, [addressData, addressOps]);
 
     return (
-        <form className={`flex-col-container address-input-form space-M ${isEditBtnClicked ? "address-edit-form": "" }`} onSubmit={(event) => {
-            event.preventDefault();
-            if(isEditBtnClicked) {
-                const updatedAddress = fetchFormData(event);
-                updateAddressHandler(updatedAddress);
-            } else {
-                const formAddressData = fetchFormData(event);
-                addAddressHandler(formAddressData);
-            }
-        }}
-        >
+        <form className={`flex-col-container address-input-form space-M ${isEditBtnClicked ? "address-edit-form": "" }`} onSubmit={(event) => onSubmitHandler(event)}>
             <div className='form-Row'>
                 <div className='form-item'>
-                    <input type="text" className='form-input-field input-primary' name='name' placeholder='Name' required></input>
+                    <input type="text" className='form-input-field input-primary' value={formData["name"]} name='name' placeholder='Name' onChange={(event) => formOnChangeHandler(event)} required></input>
                 </div>
                 <div className='form-item'>
-                    <input type="text" className='form-input-field input-primary' name='phone no' placeholder='Phone No' required></input>
+                    <input type="text" className='form-input-field input-primary' value={formData["mobile_no"]} name='mobile_no' placeholder='Phone No' onChange={(event) => formOnChangeHandler(event)} required></input>
                 </div>
             </div>
             <div className='form-Row'>
                 <div className='form-item'>
-                    <input type="text" className='form-input-field input-primary' name='pincode' placeholder='Pincode' required></input>
+                    <input type="text" className='form-input-field input-primary' value={formData["pincode"]} name='pincode' placeholder='Pincode' onChange={(event) => formOnChangeHandler(event)} required></input>
                 </div>
                 <div className='form-item'>
-                    <input type="text" className='form-input-field input-primary' name='city' placeholder='City' required></input>
+                    <input type="text" className='form-input-field input-primary' value={formData["city"]} name='city' placeholder='City' onChange={(event) => formOnChangeHandler(event)} required></input>
                 </div>
             </div>
             <div className='form-Row'>
                 <div className='form-item'>
-                    <textarea className='form-input-field form-text-area input-primary' name='address' rows="5" placeholder='Address(Area and Street)' required></textarea>
+                    <textarea className='form-input-field form-text-area input-primary' value={formData["address"]} name='address' rows="5" placeholder='Address(Area and Street)' onChange={(event) => formOnChangeHandler(event)} required></textarea>
                 </div>
             </div>
 
             <div className='form-Row'>
                 <div className='form-item'>
-                    <input type="text" className='form-input-field input-primary' name='alt phone no' placeholder='Alternate Phone No (Optional)'></input>
+                    <input type="text" className='form-input-field input-primary' value={formData["alt_mobile_no"]} name='alt_mobile_no' placeholder='Alternate Phone No (Optional)' onChange={(event) => formOnChangeHandler(event)}></input>
                 </div>
                 <div className='form-item'>
-                    <select className="form-select-field input-primary" name="state" required>
+                    <select className="form-select-field input-primary" value={formData["state"]} name="state" onChange={(event) => formOnChangeHandler(event)} required>
                         <option value="" disabled="">--Select State--</option>
                         <option value="Andhra Pradesh">Andhra Pradesh</option>
                         <option value="Arunachal Pradesh">Arunachal Pradesh</option>
@@ -143,7 +136,6 @@ const InputForm = () => {
                             setIsEditBtnClicked(false);
                         } else {
                             handleFormControllerClick();
-                            setAddressOps({...addressOps, add: false });
                         }
                     }}></input>
                 </div>

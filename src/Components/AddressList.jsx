@@ -6,10 +6,11 @@ import { EditForm } from './EditForm';
 
 const AddressList = () => {
     const { addressData, setAddressData, addressDataErr, getAddresses, updateAddress, deleteAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
-    const { isEditBtnClicked, setIsEditBtnClicked, clearFormStates } = useInputForm();
+    const { isEditBtnClicked, setIsEditBtnClicked, clearFormStates, handleFormData } = useInputForm();
 
     const handleEditBtnClick = (id) => {
         setAddressOps({...defaultAddressOps, id: id });
+        handleFormData(addressData.find((address) => address.id === id));
         setIsEditBtnClicked(true);
         clearFormStates();
     }
@@ -17,6 +18,7 @@ const AddressList = () => {
     const deleteAddressHandler = (id) => {
         setAddressData((addresses) => [...addresses.filter((address) => address.id !== id)]);
         setAddressOps({...defaultAddressOps, id: id, delete: true });
+        clearFormStates();
     }
 
     // Fetch addresses
