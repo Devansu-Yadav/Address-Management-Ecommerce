@@ -7,12 +7,14 @@ import { InputFormProvider } from './Components/Input-Form-Context';
 import { AddressDataProvider } from './Components/Address-Data-Context';
 
 ReactDOM.render(
-  <React.StrictMode>
-	<InputFormProvider>
-		<App />
-	</InputFormProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+	<React.StrictMode>
+		<InputFormProvider>
+			<AddressDataProvider>
+				<App />
+			</AddressDataProvider>
+		</InputFormProvider>
+	</React.StrictMode>,
+	document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

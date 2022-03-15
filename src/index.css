@@ -78,6 +78,11 @@ code {
 	padding: 1rem 0;
 }
 
+.address-edit-form {
+	width: 100%;
+	margin: 0;
+}
+
 .form-Row {
 	display: flex;
 	width: 100%;
@@ -109,4 +114,9 @@ code {
 
 .form-item .btn {
 	width: 85%;
+}
+
+.error {
+	color: var(--danger-color);
+	font-size: 1.6rem;
 }

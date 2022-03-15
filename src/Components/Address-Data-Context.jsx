@@ -1,12 +1,21 @@
 import axios from 'axios';
 import { useState, useContext, createContext } from 'react';
 
-const AddressDataContext = () => createContext({ apiURL: "https://622882479fd6174ca8263249.mockapi.io/api/ecommerce/addresses", data: [] });
+const AddressDataContext = createContext(
+    {   apiURL: "https://622882479fd6174ca8263249.mockapi.io/api/ecommerce/addresses", addressData: [], 
+        setAddressData: () => {},  addressDataErr: "", setAddressDataErr: () => {}, getAddresses: () => {}, addAddress: () => {},
+        updateAddress: () => {}, deleteAddress: () => {}, addressOps: { id: "", delete: false, update: false, add: false }, setAddressOps: () => {} 
+    });
+
 const useAddressData = () => useContext(AddressDataContext);
 
 const AddressDataProvider = ({ children }) => {
     const [addressData, setAddressData] = useState([]);
     const [addressDataErr, setAddressDataErr] = useState("");
+
+    const defaultAddressOps = { id: "", delete: false, update: false, add: false };
+    const [addressOps, setAddressOps] = useState(defaultAddressOps);
+
     const apiURL = "https://622882479fd6174ca8263249.mockapi.io/api/ecommerce/addresses";
 
     const getAddresses = async() => {
@@ -60,19 +69,20 @@ const AddressDataProvider = ({ children }) => {
     }
 
     return (
-        <AddressDataContext.Provider value={
-            { 
-                apiURL, 
-                addressData, 
-                setAddressData, 
-                addressDataErr, 
-                setAddressDataErr,
-                getAddresses,
-                addAddress,
-                updateAddress,
-                deleteAddress
-            }
-        }>
+        <AddressDataContext.Provider value={{ 
+            apiURL, 
+            addressData, 
+            setAddressData, 
+            addressDataErr, 
+            setAddressDataErr, 
+            getAddresses, 
+            addAddress, 
+            updateAddress, 
+            deleteAddress,
+            defaultAddressOps,
+            addressOps,
+            setAddressOps
+            }}>
             {children}
         </AddressDataContext.Provider>
     );
