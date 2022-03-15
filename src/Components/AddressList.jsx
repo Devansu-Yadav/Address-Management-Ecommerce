@@ -35,7 +35,6 @@ const AddressList = () => {
 
     return (
         <ul className='flex-col-container address-list'>
-            { addressDataErr && <div className='error'>{ addressDataErr }</div>}
             { !addressData.length ? <h2 className='heading-2'>No addresses Added!</h2>: addressData.map(address => {
                 return (
                 <li key={address.id}>

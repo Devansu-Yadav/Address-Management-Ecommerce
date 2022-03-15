@@ -32,6 +32,13 @@ const AddressDataProvider = ({ children }) => {
     const addAddress = async (address) => {
         try {
             const response = await axios.post(apiURL, address);
+            
+            // un-avoidable side-effect that I can't figure out how to remove...
+            setAddressData((addresses) => {
+                addresses[addresses.length - 1].id = response.data.id;
+                return [...addresses];
+            });
+
             console.log("Response status ", response.status);
             if (response.status === "201" || response.status === "200") {
                 console.log("Data saved on server!!");

@@ -1,29 +1,47 @@
 import '../index.css';
 import faker from 'faker';
+import uuid from "react-uuid";
 import { useEffect, useState } from 'react';
 import { useInputForm } from './Input-Form-Context';
 import { useAddressData } from './Address-Data-Context';
+import { formValidation } from './AddressFormValidation';
 
 const InputForm = () => {
     const { isFormControllerAdded, handleFormControllerClick, isEditBtnClicked, setIsEditBtnClicked, defaultFormData, formData, handleFormData } = useInputForm();
-    const { addressData, setAddressData, addAddress, updateAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
+    const { addressDataErr, setAddressDataErr, addressData, setAddressData, addAddress, updateAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
+    const [isError, setIsError] = useState(false);
 
     const onSubmitHandler = (event) => {
         event.preventDefault();
-        if(isEditBtnClicked) {
-            updateAddressHandler(formData);
-        } else {
-            addAddressHandler(formData);
+        if(!isError) {
+            if(isEditBtnClicked) {
+                updateAddressHandler(formData);
+            } else {
+                addAddressHandler(formData);
+            }
         }
     }
 
     const formOnChangeHandler = (event) => {
         handleFormData({...formData, [event.target.name]: event.target.value });
     }
+    
+    const randomBtnHandler = () => {
+        const randomAddressData = {
+            "name": faker.name.findName(),
+            "mobile_no": faker.phone.phoneNumber("##########"),
+            "pincode": faker.address.zipCode("######"),
+            "city": faker.address.city(),
+            "address": faker.address.streetAddress(true),
+            "alt_mobile_no": faker.phone.phoneNumber("##########"),
+            "state": faker.address.state()
+        }
+        handleFormData(randomAddressData);
+    }
 
     const addAddressHandler = (address) => {
         setAddressOps({...defaultAddressOps, add: true });
-        setAddressData((addresses) => addresses.concat([{...address, id: faker.random.uuid()}]));
+        setAddressData((addresses) => addresses.concat([address]));
     }
 
     const updateAddressHandler = (updatedAddress) => {
@@ -34,7 +52,6 @@ const InputForm = () => {
 
     // Add Address
     useEffect(() => {
-        console.log("Is this effect running");
         if(addressOps.add) {
             const addedAddress = addressData[addressData.length - 1];
             addAddress(addedAddress);
@@ -50,6 +67,21 @@ const InputForm = () => {
             setIsEditBtnClicked(false);
         }
     }, [addressData, addressOps]);
+
+    // Validating Form everytime before Submit
+    useEffect(() => {
+        if(!Object.values(formData).every(val => val === '')) {
+            const form = formValidation(formData);
+            
+            if(form.length) {
+                setIsError(true);
+                setAddressDataErr(form[0].errorMsg);
+            } else {
+                setIsError(false);
+                setAddressDataErr("");
+            }
+        }
+    }, [formData]);
 
     return (
         <form className={`flex-col-container address-input-form space-M ${isEditBtnClicked ? "address-edit-form": "" }`} onSubmit={(event) => onSubmitHandler(event)}>
@@ -80,7 +112,7 @@ const InputForm = () => {
                     <input type="text" className='form-input-field input-primary' value={formData["alt_mobile_no"]} name='alt_mobile_no' placeholder='Alternate Phone No (Optional)' onChange={(event) => formOnChangeHandler(event)}></input>
                 </div>
                 <div className='form-item'>
-                    <select className="form-select-field input-primary" value={formData["state"]} name="state" onChange={(event) => formOnChangeHandler(event)} required>
+                    <select className='form-select-field input-primary' value={formData["state"]} name="state" onChange={(event) => formOnChangeHandler(event)} required>
                         <option value="" disabled="">--Select State--</option>
                         <option value="Andhra Pradesh">Andhra Pradesh</option>
                         <option value="Arunachal Pradesh">Arunachal Pradesh</option>
@@ -114,6 +146,7 @@ const InputForm = () => {
                     </select>
                 </div>
             </div>
+            { addressDataErr && <div className='error'>{ addressDataErr }</div>}
             <div className='form-Row'>
                 { isEditBtnClicked && <div className='form-item'>
                     <input type="submit" value="Save" className='btn btn-primary rounded-med space-S'></input>
@@ -126,7 +159,7 @@ const InputForm = () => {
                 }
                 
                 <div className='form-item'>
-                    <input type="button" value="Random Data" className='btn btn-outline-primary rounded-med space-S'></input>
+                    <input type="button" value="Random Data" className='btn btn-outline-primary rounded-med space-S' onClick={ randomBtnHandler }></input>
                 </div>
                 
                 <div className='form-item'>
@@ -137,6 +170,7 @@ const InputForm = () => {
                         } else {
                             handleFormControllerClick();
                         }
+                        setAddressDataErr("");
                     }}></input>
                 </div>
             </div>
