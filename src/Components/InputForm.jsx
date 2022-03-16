@@ -1,15 +1,16 @@
 import '../index.css';
 import faker from 'faker';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useInputForm } from './Input-Form-Context';
 import { useAddressData } from './Address-Data-Context';
+import { useFormError } from './Form-Error-Context';
 import { formValidation } from './AddressFormValidation';
+import { FormError } from './FormError';
 
 const InputForm = () => {
     const { isFormControllerAdded, handleFormControllerClick, isEditBtnClicked, setIsEditBtnClicked, defaultFormData, formData, handleFormData } = useInputForm();
-    const { addressDataErr, setAddressDataErr, addressData, setAddressData, addAddress, updateAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
-    const [isError, setIsError] = useState(false);
-    const [errorFormField, setErrorFormField] = useState("");
+    const { addressData, setAddressData, addAddress, updateAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
+    const { addressDataErr, setAddressDataErr, isError, setIsError, errorFormField, setErrorFormField } = useFormError();
 
     const onSubmitHandler = (event) => {
         event.preventDefault();
@@ -90,21 +91,21 @@ const InputForm = () => {
             <div className='form-Row'>
                 <div className='form-item'>
                     <input type="text" className={`form-input-field input-primary ${errorFormField === 'name' ? "input-error": "" }`} value={formData["name"]} name='name' placeholder='Name' onChange={(event) => formOnChangeHandler(event)} required></input>
-                    { errorFormField === 'name' && addressDataErr && <div className='error'>{ addressDataErr }</div>}
+                    { errorFormField === 'name' && addressDataErr && <FormError />}
                 </div>
                 <div className='form-item'>
                     <input type="text" className={`form-input-field input-primary ${errorFormField === 'mobile_no' ? "input-error": "" }`} value={formData["mobile_no"]} name='mobile_no' placeholder='Phone No' onChange={(event) => formOnChangeHandler(event)} required></input>
-                    { errorFormField === 'mobile_no' && addressDataErr && <div className='error'>{ addressDataErr }</div>}
+                    { errorFormField === 'mobile_no' && addressDataErr && <FormError />}
                 </div>
             </div>
             <div className='form-Row'>
                 <div className='form-item'>
                     <input type="text" className={`form-input-field input-primary ${errorFormField === 'pincode' ? "input-error": "" }`} value={formData["pincode"]} name='pincode' placeholder='Pincode' onChange={(event) => formOnChangeHandler(event)} required></input>
-                    { errorFormField === 'pincode' && addressDataErr && <div className='error'>{ addressDataErr }</div>}
+                    { errorFormField === 'pincode' && addressDataErr && <FormError />}
                 </div>
                 <div className='form-item'>
                     <input type="text" className={`form-input-field input-primary ${errorFormField === 'city' ? "input-error": "" }`} value={formData["city"]} name='city' placeholder='City' onChange={(event) => formOnChangeHandler(event)} required></input>
-                    { errorFormField === 'city' && addressDataErr && <div className='error'>{ addressDataErr }</div>}
+                    { errorFormField === 'city' && addressDataErr && <FormError />}
                 </div>
             </div>
             <div className='form-Row'>
@@ -116,7 +117,7 @@ const InputForm = () => {
             <div className='form-Row'>
                 <div className='form-item'>
                     <input type="text" className={`form-input-field input-primary ${errorFormField === 'alt_mobile_no' ? "input-error": "" }`} value={formData["alt_mobile_no"]} name='alt_mobile_no' placeholder='Alternate Phone No (Optional)' onChange={(event) => formOnChangeHandler(event)}></input>
-                    { errorFormField === 'alt_mobile_no' && addressDataErr && <div className='error'>{ addressDataErr }</div>}
+                    { errorFormField === 'alt_mobile_no' && addressDataErr && <FormError />}
                 </div>
                 <div className='form-item'>
                     <select className={`form-select-field input-primary ${errorFormField === 'state' ? "input-error": "" }`} value={formData["state"]} name="state" onChange={(event) => formOnChangeHandler(event)} required>
@@ -153,7 +154,7 @@ const InputForm = () => {
                     </select>
                 </div>
             </div>
-            { errorFormField === 'state' && addressDataErr && <div className='error'>{ addressDataErr }</div>}
+            { errorFormField === 'state' && addressDataErr && <FormError />}
             <div className='form-Row'>
                 { isEditBtnClicked && <div className='form-item'>
                     <input type="submit" value="Save" className='btn btn-primary rounded-med space-S'></input>

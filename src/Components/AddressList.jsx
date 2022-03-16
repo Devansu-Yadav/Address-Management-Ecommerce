@@ -5,7 +5,7 @@ import { useInputForm } from './Input-Form-Context';
 import { EditForm } from './EditForm';
 
 const AddressList = () => {
-    const { addressData, setAddressData, addressDataErr, getAddresses, updateAddress, deleteAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
+    const { addressData, setAddressData, getAddresses, deleteAddress, defaultAddressOps, addressOps, setAddressOps } = useAddressData();
     const { isEditBtnClicked, setIsEditBtnClicked, clearFormStates, handleFormData } = useInputForm();
 
     const handleEditBtnClick = (id) => {

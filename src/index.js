@@ -5,12 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { InputFormProvider } from './Components/Input-Form-Context';
 import { AddressDataProvider } from './Components/Address-Data-Context';
+import { FormErrorProvider } from './Components/Form-Error-Context';
 
 ReactDOM.render(
 	<React.StrictMode>
 		<InputFormProvider>
 			<AddressDataProvider>
-				<App />
+				<FormErrorProvider>
+					<App />
+				</FormErrorProvider>
 			</AddressDataProvider>
 		</InputFormProvider>
 	</React.StrictMode>,

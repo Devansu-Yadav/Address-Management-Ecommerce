@@ -40,7 +40,6 @@ const InputFormProvider = ({ children }) => {
     }
   
     const handleFormControllerClick= () => {
-      console.log("Is Clicked??");
       isFormControllerAdded ? setIsFormControllerAdded(false): setIsFormControllerAdded(true);
     }
   
