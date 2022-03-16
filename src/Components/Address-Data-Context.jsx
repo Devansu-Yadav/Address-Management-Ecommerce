@@ -34,6 +34,9 @@ const AddressDataProvider = ({ children }) => {
             const response = await axios.post(apiURL, address);
             
             // un-avoidable side-effect that I can't figure out how to remove...
+            // When Adding a new address, we need to fetch the `id` from server and update the 
+            // Address Data state using below code to make the `id` available when Edit button on that address card
+            // is clicked. See Line No 11 of `AddressList.jsx` file..
             setAddressData((addresses) => {
                 addresses[addresses.length - 1].id = response.data.id;
                 return [...addresses];

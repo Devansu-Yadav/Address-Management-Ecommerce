@@ -99,6 +99,10 @@ code {
 	width: 85%;
 }
 
+.form-item .input-error:focus {
+	border: 1px solid var(--danger-color);
+}
+
 .form-text-area {
 	width: 93%;
 	resize: none;
